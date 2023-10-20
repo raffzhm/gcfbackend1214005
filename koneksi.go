@@ -26,3 +26,14 @@ func IsPasswordValid(mongoconn *mongo.Database, collection string, userdata User
 	res := atdb.GetOneDoc[User](mongoconn, collection, filter)
 	return CheckPasswordHash(userdata.Password, res.Password)
 }
+
+func InsertDataLonlat(mongoconn *mongo.Database, collection string, coordinate []float64, name, volume, tipe string) (InsertedID interface{}) {
+	req := new(CoorLonLatProperties)
+	req.Type = tipe
+	req.Coordinates = coordinate
+	req.Name = name
+	req.Volume = volume
+
+	ins := atdb.InsertOneDoc(mongoconn, collection, req)
+	return ins
+}

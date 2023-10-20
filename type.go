@@ -47,6 +47,13 @@ type User struct {
 	Role     string `json:"role,omitempty" bson:"role,omitempty"`
 }
 
+type CoorLonLatProperties struct {
+	Type        string    `json:"type" bson:"type"`
+	Name        string    `json:"name" bson:"name"`
+	Volume      string    `json:"volume" bson:"volume"`
+	Coordinates []float64 `json:"coordinates" bson:"coordinates"`
+}
+
 type Credential struct {
 	Status  bool   `json:"status" bson:"status"`
 	Token   string `json:"token,omitempty" bson:"token,omitempty"`
