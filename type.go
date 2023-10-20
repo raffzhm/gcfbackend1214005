@@ -41,15 +41,14 @@ type Properties struct {
 	Name string `json:"name" bson:"name"`
 }
 
-type CoorLonLatProperties struct {
-	Type        string    `json:"type" bson:"type"`
-	Name        string    `json:"name" bson:"name"`
-	Volume      string    `json:"volume" bson:"volume"`
-	Coordinates []float64 `json:"coordinates" bson:"coordinates"`
+type User struct {
+	Username string `json:"username" bson:"username"`
+	Password string `json:"password" bson:"password"`
+	Role     string `json:"role,omitempty" bson:"role,omitempty"`
 }
 
-type Credentials struct {
-	Status  string `json:"status" bson:"status"`
+type Credential struct {
+	Status  bool   `json:"status" bson:"status"`
 	Token   string `json:"token,omitempty" bson:"token,omitempty"`
-	Message string `json:"message" bson:"message"`
+	Message string `json:"message,omitempty" bson:"message,omitempty"`
 }

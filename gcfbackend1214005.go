@@ -2,41 +2,45 @@ package gcfbackend1214005
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
-	"strconv"
+	"os"
+
+	"github.com/whatsauth/watoken"
 )
 
-func GCHandlerFunc(Mongostring, dbname, colname string) string {
-	koneksyen := GetConnectionMongo(Mongostring, dbname)
-	datageo := GetAllGeoData(koneksyen, colname)
-
-	jsoncihuy, _ := json.Marshal(datageo)
-
-	return string(jsoncihuy)
+func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string) string {
+	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+	datagedung := GetAllBangunanLineString(mconn, collectionname)
+	return GCFReturnStruct(datagedung)
 }
 
-func GCFPostCoordinate(Mongostring, dbname, colname string, r *http.Request) string {
-	req := new(Credentials)
-	conn := GetConnectionMongo(Mongostring, dbname)
-	resp := new(CoorLonLatProperties)
-	err := json.NewDecoder(r.Body).Decode(&resp)
+func GCFPostHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	var Response Credential
+	Response.Status = false
+	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
+	var datauser User
+	err := json.NewDecoder(r.Body).Decode(&datauser)
 	if err != nil {
-		req.Status = strconv.Itoa(http.StatusNotFound)
-		req.Message = "error parsing application/json: " + err.Error()
+		Response.Message = "error parsing application/json: " + err.Error()
 	} else {
-		req.Status = strconv.Itoa(http.StatusOK)
-		Ins := InsertDataLonlat(conn, colname,
-			resp.Coordinates,
-			resp.Name,
-			resp.Volume,
-			resp.Type)
-		req.Message = fmt.Sprintf("%v:%v", "Berhasil Input data", Ins)
+		if IsPasswordValid(mconn, collectionname, datauser) {
+			Response.Status = true
+			tokenstring, err := watoken.Encode(datauser.Username, os.Getenv(PASETOPRIVATEKEYENV))
+			if err != nil {
+				Response.Message = "Gagal Encode Token : " + err.Error()
+			} else {
+				Response.Message = "Selamat Datang"
+				Response.Token = tokenstring
+			}
+		} else {
+			Response.Message = "Password Salah"
+		}
 	}
-	return ReturnStringStruct(req)
+
+	return GCFReturnStruct(Response)
 }
 
-func ReturnStringStruct(Data any) string {
-	jsonee, _ := json.Marshal(Data)
-	return string(jsonee)
+func GCFReturnStruct(DataStuct any) string {
+	jsondata, _ := json.Marshal(DataStuct)
+	return string(jsondata)
 }
