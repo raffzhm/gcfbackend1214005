@@ -16,7 +16,7 @@ func TestUpdateGetData(t *testing.T) {
 }
 
 func TestGeneratePasswordHash(t *testing.T) {
-	password := "secret"
+	password := "1234321"
 	hash, _ := HashPassword(password) // ignore error for the sake of simplicity
 
 	fmt.Println("Password:", password)
