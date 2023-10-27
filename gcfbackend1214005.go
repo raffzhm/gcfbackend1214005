@@ -85,7 +85,7 @@ func SignUpGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname s
 	return response
 }
 
-func SigInGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func SignInGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	var resp pasproj.Credential
 	mconn := pasproj.MongoCreateConnection(MONGOCONNSTRINGENV, dbname)
 	var datauser peda.User
