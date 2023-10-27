@@ -9,8 +9,11 @@ require (
 	golang.org/x/crypto v0.14.0
 )
 
+require aidanwoods.dev/go-result v0.1.0 // indirect
+
 require (
-	aidanwoods.dev/go-paseto v1.2.0 // indirect
+	aidanwoods.dev/go-paseto v1.5.0 // indirect
+	github.com/e-dumas-sukasari/webpasetobackend v0.0.2
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
@@ -18,6 +21,7 @@ require (
 	github.com/klauspost/compress v1.17.1 // indirect
 	github.com/microsoft/go-mssqldb v1.6.0 // indirect
 	github.com/montanaflynn/stats v0.7.1 // indirect
+	github.com/petapedia/peda v0.1.1
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
