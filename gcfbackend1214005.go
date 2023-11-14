@@ -64,9 +64,9 @@ func GCFPostHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionn
 	return GCFReturnStruct(Response)
 }
 
-func SignUpGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func SignUpGCF(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	resp := new(pasproj.Credential)
-	userdata := new(User)
+	userdata := new(RegistUser)
 	resp.Status = false
 	conn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	err := json.NewDecoder(r.Body).Decode(&userdata)

@@ -47,6 +47,11 @@ type User struct {
 	Role     string `json:"role,omitempty" bson:"role,omitempty"`
 }
 
+type RegistUser struct {
+	Username string `json:"username" bson:"username"`
+	Password string `json:"password" bson:"password"`
+}
+
 type CoorLonLatProperties struct {
 	Type        string    `json:"type" bson:"type"`
 	Name        string    `json:"name" bson:"name"`
