@@ -40,7 +40,7 @@ func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Reque
 }
 
 
-func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, Mongostring, dbname, collectionname string, r *http.Request) string {
 	req := new(Credential)
 	tokenLogin := r.Header.Get("Login")
 
