@@ -56,7 +56,7 @@ type CoorLonLatProperties struct {
 	Type        string    `json:"type" bson:"type"`
 	Name        string    `json:"name" bson:"name"`
 	Volume      string    `json:"volume" bson:"volume"`
-	Coordinates []float64 `json:"coordinates" bson:"coordinates"`
+	Coordinates [][]float64 `json:"coordinates" bson:"coordinates"`
 }
 
 type Credential struct {

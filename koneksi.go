@@ -27,7 +27,7 @@ func IsPasswordValid(mongoconn *mongo.Database, collection string, userdata User
 	return CheckPasswordHash(userdata.Password, res.Password)
 }
 
-func InsertDataLonlat(mongoconn *mongo.Database, collection string, coordinate []float64, name, volume, tipe string) (InsertedID interface{}) {
+func InsertDataLonlat(mongoconn *mongo.Database, collection string, coordinate [][]float64, name, volume, tipe string) (InsertedID interface{}) {
 	req := new(CoorLonLatProperties)
 	req.Type = tipe
 	req.Coordinates = coordinate
