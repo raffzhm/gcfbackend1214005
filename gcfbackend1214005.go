@@ -37,6 +37,42 @@ func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Reque
 	return GCFReturnStruct(datagedung)
 }
 
+func GCFPostCoordinateLonLat2(MONGOCONNSTRINGENV, Mongostring, dbname, collectionname string, r *http.Request) string {
+	req := new(Credential)
+	tokenLogin := r.Header.Get("Login")
+
+	if tokenLogin == "" {
+		req.Status = false
+		req.Message = "Header Login Not Exist"
+		return GCFReturnStruct(req)
+	}
+
+	// Validate the token using your existing logic
+	existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
+
+	if !existing {
+		req.Status = false
+		req.Message = "Kamu belum memiliki akun"
+		return GCFReturnStruct(req)
+	}
+
+	conn := SetConnection(Mongostring, dbname)
+	resp := new(CoorLonLatProperties)
+	err := json.NewDecoder(r.Body).Decode(&resp)
+	if err != nil {
+		req.Status = false
+		req.Message = "error parsing application/json: " + err.Error()
+	} else {
+		req.Status = true
+		Ins := InsertDataLonlat(conn, collectionname,
+			resp.Coordinates,
+			resp.Name,
+			resp.Volume,
+			resp.Type)
+		req.Message = fmt.Sprintf("%v:%v", "Berhasil Input data", Ins)
+	}
+	return GCFReturnStruct(req)
+}
 
 func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, Mongostring, dbname, collectionname string, r *http.Request) string {
 	req := new(Credential)
