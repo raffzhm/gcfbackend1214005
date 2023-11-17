@@ -42,6 +42,23 @@ func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Reque
 
 func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	req := new(Credential)
+	tokenLogin := r.Header.Get("Login")
+
+	if tokenLogin == "" {
+		req.Status = false
+		req.Message = "Header Login Not Exist"
+		return GCFReturnStruct(req)
+	}
+
+	// Validate the token using your existing logic
+	existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
+
+	if !existing {
+		req.Status = false
+		req.Message = "Kamu belum memiliki akun"
+		return GCFReturnStruct(req)
+	}
+
 	conn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	resp := new(CoorLonLatProperties)
 	err := json.NewDecoder(r.Body).Decode(&resp)
@@ -59,6 +76,7 @@ func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, dbname, collectionname string, 
 	}
 	return GCFReturnStruct(req)
 }
+
 
 func GCFPostHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	var Response Credential
@@ -131,9 +149,26 @@ func SignInGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname s
 	return pasproj.ReturnStringStruct(resp)
 }
 
-func GCFUpdateGeo(Mongostring, dbname, colname string, r *http.Request) string {
+func GCFUpdateGeo(MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
     req := new(Credential)
     resp := new(CoorLonLatProperties)
+
+    tokenLogin := r.Header.Get("Login")
+    if tokenLogin == "" {
+        req.Status = false
+        req.Message = "Header Login Not Exist"
+        return GCFReturnStruct(req)
+    }
+
+    // Validate the token using your existing logic
+    existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
+
+    if !existing {
+        req.Status = false
+        req.Message = "Kamu belum memiliki akun"
+        return GCFReturnStruct(req)
+    }
+
     conn := SetConnection(Mongostring, dbname)
     err := json.NewDecoder(r.Body).Decode(&resp)
     if err != nil {
@@ -151,9 +186,27 @@ func GCFUpdateGeo(Mongostring, dbname, colname string, r *http.Request) string {
 }
 
 
-func GCFDelDataGeo(Mongostring, dbname, colname string, r *http.Request) string {
+
+func GCFDelDataGeo(MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
     req := new(Credential)
     resp := new(CoorLonLatProperties)
+
+    tokenLogin := r.Header.Get("Login")
+    if tokenLogin == "" {
+        req.Status = false
+        req.Message = "Header Login Not Exist"
+        return GCFReturnStruct(req)
+    }
+
+    // Validate the token using your existing logic
+    existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
+
+    if !existing {
+        req.Status = false
+        req.Message = "Kamu belum memiliki akun"
+        return GCFReturnStruct(req)
+    }
+
     conn := SetConnection(Mongostring, dbname)
     err := json.NewDecoder(r.Body).Decode(&resp)
     if err != nil {
@@ -171,6 +224,7 @@ func GCFDelDataGeo(Mongostring, dbname, colname string, r *http.Request) string 
     }
     return GCFReturnStruct(req)
 }
+
 
 
 
