@@ -134,7 +134,7 @@ func SignInGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname s
 		resp.Message = "error parsing application/json: " + err.Error()
 	} else {
 		if peda.IsPasswordValid(mconn, collectionname, datauser) {
-			tokenstring, err := watoken.Encode(datauser.Username, os.Getenv(PASETOPRIVATEKEYENV))
+			tokenstring, err := watoken.Encode(datauser.Username, os.Getenv(MONGOCONNSTRINGENV))
 			if err != nil {
 				resp.Message = "Gagal Encode Token : " + err.Error()
 			} else {
