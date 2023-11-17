@@ -31,8 +31,6 @@ func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Reque
 		resp.Message = "Kamu belum memiliki akun"
 		return pasproj.ReturnStringStruct(resp)
 	}
-
-	// Proceed with your existing logic to get data
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	datagedung := GetAllBangunanLineString(mconn, collectionname)
 
