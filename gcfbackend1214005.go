@@ -13,7 +13,7 @@ import (
 	"github.com/whatsauth/watoken"
 )
 
-func GCFHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	resp := new(pasproj.Credential)
 	tokenLogin := r.Header.Get("Login")
 
@@ -24,7 +24,7 @@ func GCFHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname 
 	}
 
 	// Validate the token using your existing logic
-	existing := IsExist(tokenLogin, os.Getenv(PASETOPRIVATEKEYENV))
+	existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
 
 	if !existing {
 		resp.Status = false
@@ -40,7 +40,7 @@ func GCFHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname 
 }
 
 
-func GCFPostCoordinateLonLat(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	req := new(Credential)
 	tokenLogin := r.Header.Get("Login")
 
@@ -51,7 +51,7 @@ func GCFPostCoordinateLonLat(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, co
 	}
 
 	// Validate the token using your existing logic
-	existing := IsExist(tokenLogin, os.Getenv(PASETOPRIVATEKEYENV))
+	existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
 
 	if !existing {
 		req.Status = false
@@ -78,7 +78,7 @@ func GCFPostCoordinateLonLat(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, co
 }
 
 
-func GCFPostHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func GCFPostHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	var Response Credential
 	Response.Status = false
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
@@ -89,7 +89,7 @@ func GCFPostHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionn
 	} else {
 		if IsPasswordValid(mconn, collectionname, datauser) {
 			Response.Status = true
-			tokenstring, err := watoken.Encode(datauser.Username, os.Getenv(PASETOPRIVATEKEYENV))
+			tokenstring, err := watoken.Encode(datauser.Username, os.Getenv(MONGOCONNSTRINGENV))
 			if err != nil {
 				Response.Message = "Gagal Encode Token : " + err.Error()
 			} else {
@@ -149,7 +149,7 @@ func SignInGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname s
 	return pasproj.ReturnStringStruct(resp)
 }
 
-func GCFUpdateGeo(PASETOPRIVATEKEYENV, Mongostring, dbname, colname string, r *http.Request) string {
+func GCFUpdateGeo(MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
     req := new(Credential)
     resp := new(CoorLonLatProperties)
 
@@ -161,7 +161,7 @@ func GCFUpdateGeo(PASETOPRIVATEKEYENV, Mongostring, dbname, colname string, r *h
     }
 
     // Validate the token using your existing logic
-    existing := IsExist(tokenLogin, os.Getenv(PASETOPRIVATEKEYENV))
+    existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
 
     if !existing {
         req.Status = false
@@ -187,7 +187,7 @@ func GCFUpdateGeo(PASETOPRIVATEKEYENV, Mongostring, dbname, colname string, r *h
 
 
 
-func GCFDelDataGeo(PASETOPRIVATEKEYENV, Mongostring, dbname, colname string, r *http.Request) string {
+func GCFDelDataGeo(MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
     req := new(Credential)
     resp := new(CoorLonLatProperties)
 
@@ -199,7 +199,7 @@ func GCFDelDataGeo(PASETOPRIVATEKEYENV, Mongostring, dbname, colname string, r *
     }
 
     // Validate the token using your existing logic
-    existing := IsExist(tokenLogin, os.Getenv(PASETOPRIVATEKEYENV))
+    existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
 
     if !existing {
         req.Status = false
