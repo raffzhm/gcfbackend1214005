@@ -149,7 +149,7 @@ func SignInGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname s
 	return pasproj.ReturnStringStruct(resp)
 }
 
-func GCFUpdateGeo(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
+func GCFUpdateGeo(PASETOPRIVATEKEYENV, Mongostring, dbname, colname string, r *http.Request) string {
     req := new(Credential)
     resp := new(CoorLonLatProperties)
 
@@ -187,7 +187,7 @@ func GCFUpdateGeo(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, Mongostring, dbname, 
 
 
 
-func GCFDelDataGeo(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
+func GCFDelDataGeo(PASETOPRIVATEKEYENV, Mongostring, dbname, colname string, r *http.Request) string {
     req := new(Credential)
     resp := new(CoorLonLatProperties)
 
