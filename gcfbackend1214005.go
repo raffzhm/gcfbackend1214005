@@ -13,7 +13,7 @@ import (
 	"github.com/whatsauth/watoken"
 )
 
-func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func GCFHandler(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	resp := new(pasproj.Credential)
 	tokenLogin := r.Header.Get("Login")
 
@@ -24,7 +24,7 @@ func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Reque
 	}
 
 	// Validate the token using your existing logic
-	existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
+	existing := IsExist(tokenLogin, os.Getenv(PASETOPRIVATEKEYENV))
 
 	if !existing {
 		resp.Status = false
@@ -40,7 +40,7 @@ func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Reque
 }
 
 
-func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+func GCFPostCoordinateLonLat(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	req := new(Credential)
 	tokenLogin := r.Header.Get("Login")
 
@@ -51,7 +51,7 @@ func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, dbname, collectionname string, 
 	}
 
 	// Validate the token using your existing logic
-	existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
+	existing := IsExist(tokenLogin, os.Getenv(PASETOPRIVATEKEYENV))
 
 	if !existing {
 		req.Status = false
@@ -134,7 +134,7 @@ func SignInGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname s
 		resp.Message = "error parsing application/json: " + err.Error()
 	} else {
 		if peda.IsPasswordValid(mconn, collectionname, datauser) {
-			tokenstring, err := watoken.Encode(datauser.Username, os.Getenv(MONGOCONNSTRINGENV))
+			tokenstring, err := watoken.Encode(datauser.Username, os.Getenv(PASETOPRIVATEKEYENV))
 			if err != nil {
 				resp.Message = "Gagal Encode Token : " + err.Error()
 			} else {
@@ -149,7 +149,7 @@ func SignInGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname s
 	return pasproj.ReturnStringStruct(resp)
 }
 
-func GCFUpdateGeo(MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
+func GCFUpdateGeo(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
     req := new(Credential)
     resp := new(CoorLonLatProperties)
 
@@ -161,7 +161,7 @@ func GCFUpdateGeo(MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *ht
     }
 
     // Validate the token using your existing logic
-    existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
+    existing := IsExist(tokenLogin, os.Getenv(PASETOPRIVATEKEYENV))
 
     if !existing {
         req.Status = false
@@ -187,7 +187,7 @@ func GCFUpdateGeo(MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *ht
 
 
 
-func GCFDelDataGeo(MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
+func GCFDelDataGeo(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *http.Request) string {
     req := new(Credential)
     resp := new(CoorLonLatProperties)
 
@@ -199,7 +199,7 @@ func GCFDelDataGeo(MONGOCONNSTRINGENV, Mongostring, dbname, colname string, r *h
     }
 
     // Validate the token using your existing logic
-    existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
+    existing := IsExist(tokenLogin, os.Getenv(PASETOPRIVATEKEYENV))
 
     if !existing {
         req.Status = false
