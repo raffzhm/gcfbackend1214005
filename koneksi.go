@@ -2,7 +2,7 @@ package gcfbackend1214005
 
 import (
 	"os"
-
+	"context"
 	"github.com/aiteung/atdb"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -36,4 +36,34 @@ func InsertDataLonlat(mongoconn *mongo.Database, collection string, coordinate [
 
 	ins := atdb.InsertOneDoc(mongoconn, collection, req)
 	return ins
+}
+
+func UpdateDataGeojson(mongoconn *mongo.Database, colname, name, newVolume, newTipe string) error {
+    // Filter berdasarkan nama
+    filter := bson.M{"name": name}
+
+    // Update data yang akan diubah
+    update := bson.M{
+        "$set": bson.M{
+            "volume": newVolume,
+            "tipe":   newTipe,
+        },
+    }
+
+    // Mencoba untuk mengupdate dokumen
+    _, err := mongoconn.Collection(colname).UpdateOne(context.TODO(), filter, update)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+func DeleteDataGeojson(mongoconn *mongo.Database, colname string, name string) (*mongo.DeleteResult, error) {
+    filter := bson.M{"name": name}
+    del, err := mongoconn.Collection(colname).DeleteOne(context.TODO(), filter)
+    if err != nil {
+        return nil, err
+    }
+    return del, nil
 }

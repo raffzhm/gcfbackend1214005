@@ -1,12 +1,13 @@
 package gcfbackend1214005
 
 import (
-	pasproj "github.com/e-dumas-sukasari/webpasetobackend"
-	"github.com/petapedia/peda"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
+
+	pasproj "github.com/e-dumas-sukasari/webpasetobackend"
+	"github.com/petapedia/peda"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/whatsauth/watoken"
@@ -108,6 +109,49 @@ func SignInGCF(PASETOPRIVATEKEYENV, MONGOCONNSTRINGENV, dbname, collectionname s
 	}
 	return pasproj.ReturnStringStruct(resp)
 }
+
+func GCFUpdateGeo(Mongostring, dbname, colname string, r *http.Request) string {
+    req := new(Credential)
+    resp := new(CoorLonLatProperties)
+    conn := SetConnection(Mongostring, dbname)
+    err := json.NewDecoder(r.Body).Decode(&resp)
+    if err != nil {
+        req.Status = false
+        req.Message = "error parsing application/json: " + err.Error()
+    } else {
+        req.Status = true
+        Ins := UpdateDataGeojson(conn, colname,
+            resp.Name,
+            resp.Volume,
+            resp.Type)
+        req.Message = fmt.Sprintf("%v:%v", "Berhasil Update data", Ins)
+    }
+    return GCFReturnStruct(req)
+}
+
+
+func GCFDelDataGeo(Mongostring, dbname, colname string, r *http.Request) string {
+    req := new(Credential)
+    resp := new(CoorLonLatProperties)
+    conn := SetConnection(Mongostring, dbname)
+    err := json.NewDecoder(r.Body).Decode(&resp)
+    if err != nil {
+        req.Status = false
+        req.Message = "error parsing application/json: " + err.Error()
+    } else {
+        req.Status = true
+        delResult, delErr := DeleteDataGeojson(conn, colname, resp.Name)
+        if delErr != nil {
+            req.Status = false
+            req.Message = "error deleting data: " + delErr.Error()
+        } else {
+            req.Message = fmt.Sprintf("Berhasil menghapus data. Jumlah data terhapus: %v", delResult.DeletedCount)
+        }
+    }
+    return GCFReturnStruct(req)
+}
+
+
 
 func GCFReturnStruct(DataStuct any) string {
 	jsondata, _ := json.Marshal(DataStuct)
