@@ -13,11 +13,32 @@ import (
 	"github.com/whatsauth/watoken"
 )
 
-func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string) string {
+func GCFHandler(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
+	resp := new(pasproj.Credential)
+	tokenLogin := r.Header.Get("Login")
+
+	if tokenLogin == "" {
+		resp.Status = false
+		resp.Message = "Header Login Not Exist"
+		return pasproj.ReturnStringStruct(resp)
+	}
+
+	// Validate the token using your existing logic
+	existing := IsExist(tokenLogin, os.Getenv(MONGOCONNSTRINGENV))
+
+	if !existing {
+		resp.Status = false
+		resp.Message = "Kamu belum memiliki akun"
+		return pasproj.ReturnStringStruct(resp)
+	}
+
+	// Proceed with your existing logic to get data
 	mconn := SetConnection(MONGOCONNSTRINGENV, dbname)
 	datagedung := GetAllBangunanLineString(mconn, collectionname)
+
 	return GCFReturnStruct(datagedung)
 }
+
 
 func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, dbname, collectionname string, r *http.Request) string {
 	req := new(Credential)
@@ -163,4 +184,12 @@ func InsertUserdata(MongoConn *mongo.Database, username, password string) (Inser
 	req.Username = username
 	req.Password = password
 	return pasproj.InsertOneDoc(MongoConn, "user", req)
+}
+
+func IsExist(Tokenstr, PublicKey string) bool {
+	id := watoken.DecodeGetId(PublicKey, Tokenstr)
+	if id == "" {
+		return false
+	}
+	return true
 }
