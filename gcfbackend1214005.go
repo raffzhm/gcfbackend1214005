@@ -57,7 +57,7 @@ func GCFPostCoordinateLonLat(MONGOCONNSTRINGENV, Mongostring, dbname, collection
 		return GCFReturnStruct(req)
 	}
 
-	conn := SetConnection(MONGOCONNSTRINGENV, dbname)
+	conn := SetConnection(Mongostring, dbname)
 	resp := new(CoorLonLatProperties)
 	err := json.NewDecoder(r.Body).Decode(&resp)
 	if err != nil {
